@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{A295C831-9C08-406C-80C0-58A0040EB345}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{43437690-8FAD-413F-89D6-6E021FC16B2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kanban.SharedKernel", "Kanban.SharedKernel\Kanban.SharedKernel.csproj", "{AD6EC61F-0C2B-4D49-B0D8-4F8B04B15407}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kanban.Domain.Model", "Kanban.Domain.Model\Kanban.Domain.Model.csproj", "{5F173493-3C6E-47FF-BD8E-34385C7EE8C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kanban.Domain.Services", "Kanban.Domain.Services\Kanban.Domain.Services.csproj", "{BBC1C46B-444D-4F05-BDAA-5FB7D3AA4F6A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{94402436-2413-4CD3-8E9D-2AD68FFEA716}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{27391171-D51C-44DA-B228-CAD1CD9C23E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{00F8EB38-DCA4-4E1F-8BE5-3AD13282F32E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{2CBD4A84-6BDE-4B0B-8C7B-186EBEAF2643}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD6EC61F-0C2B-4D49-B0D8-4F8B04B15407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD6EC61F-0C2B-4D49-B0D8-4F8B04B15407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD6EC61F-0C2B-4D49-B0D8-4F8B04B15407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD6EC61F-0C2B-4D49-B0D8-4F8B04B15407}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F173493-3C6E-47FF-BD8E-34385C7EE8C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F173493-3C6E-47FF-BD8E-34385C7EE8C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F173493-3C6E-47FF-BD8E-34385C7EE8C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F173493-3C6E-47FF-BD8E-34385C7EE8C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBC1C46B-444D-4F05-BDAA-5FB7D3AA4F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBC1C46B-444D-4F05-BDAA-5FB7D3AA4F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBC1C46B-444D-4F05-BDAA-5FB7D3AA4F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBC1C46B-444D-4F05-BDAA-5FB7D3AA4F6A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AD6EC61F-0C2B-4D49-B0D8-4F8B04B15407} = {43437690-8FAD-413F-89D6-6E021FC16B2D}
+		{5F173493-3C6E-47FF-BD8E-34385C7EE8C0} = {A295C831-9C08-406C-80C0-58A0040EB345}
+		{BBC1C46B-444D-4F05-BDAA-5FB7D3AA4F6A} = {A295C831-9C08-406C-80C0-58A0040EB345}
+	EndGlobalSection
+EndGlobal
