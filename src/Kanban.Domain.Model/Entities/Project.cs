@@ -11,7 +11,7 @@ namespace Kanban.Domain.Model.Entities
 
         public ProjectStatus Status { get; set; }
 
-        public IEnumerable<ProjectTask> Tasks { get; set; }
+        public List<ProjectTask> Tasks { get; set; }
     }
 
     public enum ProjectStatus

@@ -11,7 +11,11 @@ namespace Kanban.Domain.Model.Entities
 
         public string Number { get; set; }
 
+        public Guid ReporterId { get; set; }
+
         public User Reporter { get; set; }
+
+        public Guid AssigneeId { get; set; }
 
         public User Assignee { get; set; }
 
@@ -24,6 +28,8 @@ namespace Kanban.Domain.Model.Entities
         public ProjectTaskStatus Status { get; set; }
 
         public Guid ProjectId { get; set; }
+
+        public Project Project { get; set; }
     }
 
     public enum ProjectTaskStatus

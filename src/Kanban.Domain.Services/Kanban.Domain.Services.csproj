@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Kanban.Domain.Model\Kanban.Domain.Model.csproj" />
     <ProjectReference Include="..\Kanban.SharedKernel\Kanban.SharedKernel.csproj" />
   </ItemGroup>
 
