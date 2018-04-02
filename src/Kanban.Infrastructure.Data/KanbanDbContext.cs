@@ -16,6 +16,10 @@ namespace Kanban.Infrastructure.Data
 
             modelBuilder.Entity<ProjectTask>()
                 .HasKey(x => x.Id);
+            modelBuilder.Entity<ProjectTask>()
+                .HasOne(x => x.Project)
+                .WithMany(x => x.Tasks)
+                .HasForeignKey(x => x.ProjectId);
 
             modelBuilder.Entity<User>()
                 .HasKey(x => x.Id);
