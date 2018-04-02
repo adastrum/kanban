@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{A295C831-9C08-406C-80C0-58A0040EB345}"
 EndProject
@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{2CBD4A84-6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Infrastructure.Data", "Kanban.Infrastructure.Data\Kanban.Infrastructure.Data.csproj", "{9824C473-83A2-4E68-8D18-C3D94A8939A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kanban.Tests", "Kanban.Tests\Kanban.Tests.csproj", "{454102B7-A347-4509-962E-B6C7504A3220}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Tests", "Kanban.Tests\Kanban.Tests.csproj", "{454102B7-A347-4509-962E-B6C7504A3220}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
