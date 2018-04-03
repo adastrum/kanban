@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Kanban.Domain.Services.Repositories;
 using Kanban.SharedKernel;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ namespace Kanban.Infrastructure.Data
             return _dbSet.ToList();
         }
 
-        public IEnumerable<TEntity> Get(Func<TEntity, bool> predicate)
+        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
         {
             return _dbSet.Where(predicate).ToList();
         }

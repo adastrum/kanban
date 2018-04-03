@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Kanban.SharedKernel;
 
 namespace Kanban.Domain.Services.Repositories
@@ -13,7 +14,7 @@ namespace Kanban.Domain.Services.Repositories
 
         IEnumerable<TEntity> Get();
 
-        IEnumerable<TEntity> Get(Func<TEntity, bool> predicate);
+        IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
 
         void Remove(TEntity item);
 
