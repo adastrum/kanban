@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Infrastructure.Data"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Tests", "Kanban.Tests\Kanban.Tests.csproj", "{454102B7-A347-4509-962E-B6C7504A3220}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kanban.Application.Services", "Kanban.Application.Services\Kanban.Application.Services.csproj", "{ED275892-54AB-44D9-B6C7-231D3F6BC0F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Application.Services", "Kanban.Application.Services\Kanban.Application.Services.csproj", "{ED275892-54AB-44D9-B6C7-231D3F6BC0F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kanban.Web.Mvc", "Kanban.Web.Mvc\Kanban.Web.Mvc.csproj", "{1FE0DCB6-88A5-408B-8A41-BF4F30AF097D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{ED275892-54AB-44D9-B6C7-231D3F6BC0F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED275892-54AB-44D9-B6C7-231D3F6BC0F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED275892-54AB-44D9-B6C7-231D3F6BC0F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FE0DCB6-88A5-408B-8A41-BF4F30AF097D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE0DCB6-88A5-408B-8A41-BF4F30AF097D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE0DCB6-88A5-408B-8A41-BF4F30AF097D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE0DCB6-88A5-408B-8A41-BF4F30AF097D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{9824C473-83A2-4E68-8D18-C3D94A8939A5} = {27391171-D51C-44DA-B228-CAD1CD9C23E0}
 		{454102B7-A347-4509-962E-B6C7504A3220} = {2CBD4A84-6BDE-4B0B-8C7B-186EBEAF2643}
 		{ED275892-54AB-44D9-B6C7-231D3F6BC0F6} = {94402436-2413-4CD3-8E9D-2AD68FFEA716}
+		{1FE0DCB6-88A5-408B-8A41-BF4F30AF097D} = {00F8EB38-DCA4-4E1F-8BE5-3AD13282F32E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9F5DB32-CB73-48B1-AEA0-D288419B9C63}
