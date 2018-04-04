@@ -1,4 +1,5 @@
-﻿using Kanban.Application.Services;
+﻿using AutoMapper;
+using Kanban.Application.Services;
 using Kanban.Domain.Model.Entities;
 using Kanban.Domain.Services.Repositories;
 using Kanban.Domain.Services.Services;
@@ -23,6 +24,7 @@ namespace Kanban.Web.Mvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper();
             services.AddMvc();
             services.AddScoped<DbContext, KanbanDbContext>();
             services.AddScoped<IRepository<Project>, Repository<Project>>();
