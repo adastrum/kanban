@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper;
 using Kanban.Application.Services.Filters;
+using Kanban.Domain.Model.Entities;
 using Kanban.Domain.Services.Services;
 using Kanban.Web.Mvc.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,32 @@ namespace Kanban.Web.Mvc.Controllers
             model.Projects = projects
                 .Select(x => _mapper.Map<ProjectViewModel>(x))
                 .ToList();
+
             return View(model);
+        }
+
+        public IActionResult Details(Guid id)
+        {
+            var project = _projectService.FindById(id);
+            var model = new ProjectDetailsViewModel
+            {
+                Project = _mapper.Map<ProjectViewModel>(project)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(ProjectViewModel project)
+        {
+            if (ModelState.IsValid)
+            {
+                _projectService.Update(_mapper.Map<Project>(project));
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Edit), project.Id);
         }
     }
 }

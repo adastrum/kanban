@@ -6,3 +6,24 @@
 }
 
 <h2>title</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model.Projects)
+        {
+            <tr>
+                <td>@project.Id</td>
+                <td>
+                    <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">@project.Name</a>
+                </td>
+                <td>@project.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>

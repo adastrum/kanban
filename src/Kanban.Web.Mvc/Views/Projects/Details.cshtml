@@ -1,0 +1,32 @@
+﻿@using Kanban.Domain.Model.Entities
+@model ProjectDetailsViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>title</h2>
+<div>
+    <form asp-action="Edit">
+        <div class="form-group">
+            <label asp-for="Project.Id"></label>
+            <input class="form-control" asp-for="Project.Id" readonly />
+        </div>
+        <div class="form-group">
+            <label asp-for="Project.Name"></label>
+            <input class="form-control" asp-for="Project.Name" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Project.Description"></label>
+            <textarea class="form-control" asp-for="Project.Description"></textarea>
+        </div>
+        <div class="form-group">
+            <label asp-for="Project.Status"></label>
+            <select class="form-control" asp-for="Project.Status" asp-items="Html.GetEnumSelectList<ProjectStatus>()"></select>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Save changes" />
+        </div>
+    </form>
+</div>

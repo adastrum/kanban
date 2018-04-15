@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Kanban.Domain.Model.Entities;
 
 namespace Kanban.Web.Mvc.Models
 {
     public class ProjectViewModel
     {
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
