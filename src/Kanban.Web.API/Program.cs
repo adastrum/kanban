@@ -12,6 +12,8 @@ namespace Kanban.Web.API
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseApplicationInsights()
+                .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
     }

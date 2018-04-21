@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Reflection;
+using AutoMapper;
 using Kanban.Application.Services;
 using Kanban.Domain.Model.Entities;
 using Kanban.Domain.Services.Repositories;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NJsonSchema;
+using NSwag.AspNetCore;
 
 namespace Kanban.Web.API
 {
@@ -38,6 +41,11 @@ namespace Kanban.Web.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwaggerUi(typeof(Startup).GetTypeInfo().Assembly, settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling = PropertyNameHandling.CamelCase;
+            });
 
             app.UseMvc();
         }
