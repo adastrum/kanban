@@ -1,12 +1,18 @@
 import { Component, OnInit } from "@angular/core";
-import { ProjectsClient, ProjectStatus } from "../../clients/project.client";
+import {
+  ProjectsClient,
+  ProjectStatus,
+  Project,
+  ProjectFilter
+} from "../../clients/project.client";
 
 @Component({
   selector: "projects",
   templateUrl: "./projects.component.html"
 })
 export class ProjectsComponent implements OnInit {
-  projects: any[];
+  filter: ProjectFilter;
+  projects: Project[];
   client: ProjectsClient;
 
   constructor(client: ProjectsClient) {
@@ -14,8 +20,9 @@ export class ProjectsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.client.getProjects("", "", null).subscribe(x => {
-      console.log(x);
+    this.filter = new ProjectFilter();
+    this.client.getProjects(this.filter).subscribe(x => {
+      this.projects = x;
     });
   }
 }
