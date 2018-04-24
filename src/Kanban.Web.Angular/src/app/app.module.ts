@@ -8,12 +8,14 @@ import { ProjectsComponent } from "./components/project/projects.component";
 import { ProjectsClient, API_BASE_URL } from "./clients/project.client";
 import { AppRoutingModule } from "./app-routing.module";
 import { ProjectComponent } from "./components/project/project.component";
+import { ProjectClientMock } from "./clients/project.client.mock";
 
 @NgModule({
   declarations: [AppComponent, ProjectsComponent, ProjectComponent],
   imports: [BrowserModule, HttpClientModule, AppRoutingModule, FormsModule],
   providers: [
-    ProjectsClient,
+    { provide: ProjectsClient, useClass: ProjectClientMock },
+    // ProjectsClient,
     {
       provide: API_BASE_URL,
       useValue: "http://kanban.api"
@@ -22,4 +24,4 @@ import { ProjectComponent } from "./components/project/project.component";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
