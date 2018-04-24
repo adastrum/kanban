@@ -28,10 +28,10 @@ import {
 export const API_BASE_URL = new InjectionToken("API_BASE_URL");
 
 export interface IProjectsClient {
-  getProjects(filter: ProjectFilter): Observable<Project[] | null>;
-  createProject(model: CreateProjectModel | null): Observable<object | null>;
-  getProjectById(id: string): Observable<Project | null>;
-  put(id: string, model: UpdateProjectModel | null): Observable<object | null>;
+  getByFilter(filter: ProjectFilter): Observable<Project[] | null>;
+  create(model: CreateProjectModel | null): Observable<object | null>;
+  getById(id: string): Observable<Project | null>;
+  update(id: string, model: UpdateProjectModel | null): Observable<object | null>;
   delete(id: string): Observable<object | null>;
 }
 
@@ -53,7 +53,7 @@ export class ProjectsClient implements IProjectsClient {
     this.baseUrl = baseUrl ? baseUrl : "";
   }
 
-  getProjects(filter: ProjectFilter): Observable<Project[] | null> {
+  getByFilter(filter: ProjectFilter): Observable<Project[] | null> {
     let url_ = this.baseUrl + "/api/Projects?";
     if (filter.name !== undefined)
       url_ += "Name=" + encodeURIComponent("" + filter.name) + "&";
@@ -69,7 +69,7 @@ export class ProjectsClient implements IProjectsClient {
     });
   }
 
-  createProject(model: CreateProjectModel | null): Observable<object | null> {
+  create(model: CreateProjectModel | null): Observable<object | null> {
     let url_ = this.baseUrl + "/api/Projects";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -78,7 +78,7 @@ export class ProjectsClient implements IProjectsClient {
     return this.http.post(url_, content_);
   }
 
-  getProjectById(id: string): Observable<Project | null> {
+  getById(id: string): Observable<Project | null> {
     let url_ = this.baseUrl + "/api/Projects/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
@@ -90,7 +90,7 @@ export class ProjectsClient implements IProjectsClient {
     });
   }
 
-  put(id: string, model: UpdateProjectModel | null): Observable<object | null> {
+  update(id: string, model: UpdateProjectModel | null): Observable<object | null> {
     let url_ = this.baseUrl + "/api/Projects/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");

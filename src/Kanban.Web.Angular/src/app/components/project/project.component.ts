@@ -4,7 +4,8 @@ import { ActivatedRoute } from "@angular/router";
 import {
   ProjectsClient,
   ProjectStatus,
-  Project
+  Project,
+  UpdateProjectModel
 } from "../../clients/project.client";
 
 @Component({
@@ -12,10 +13,11 @@ import {
   templateUrl: "./project.component.html"
 })
 export class ProjectComponent implements OnInit {
-  project: Project;
   client: ProjectsClient;
   route: ActivatedRoute;
   location: Location;
+  project: Project;
+  statuses: ProjectStatus[] = [ProjectStatus.Active, ProjectStatus.Inactive];
 
   constructor(client: ProjectsClient, route: ActivatedRoute, location: Location) {
     this.client = client;
@@ -25,12 +27,22 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get("id");
-    this.client.getProjectById(id).subscribe(x => {
-      this.project = x;
-    });
+    this.client
+      .getById(id)
+      .subscribe(x => {
+        this.project = x;
+      });
   }
 
   goBack(): void {
     this.location.back();
+  }
+
+  update(): void {
+    this.client
+      .update(this.project.id, new UpdateProjectModel({ name: this.project.name, description: this.project.description, status: this.project.status }))
+      .subscribe(x => {
+        console.log("updated")
+      });
   }
 }

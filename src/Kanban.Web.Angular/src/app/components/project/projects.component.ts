@@ -11,9 +11,9 @@ import {
   templateUrl: "./projects.component.html"
 })
 export class ProjectsComponent implements OnInit {
+  client: ProjectsClient;
   filter: ProjectFilter;
   projects: Project[];
-  client: ProjectsClient;
 
   constructor(client: ProjectsClient) {
     this.client = client;
@@ -21,8 +21,10 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.filter = new ProjectFilter();
-    this.client.getProjects(this.filter).subscribe(x => {
-      this.projects = x;
-    });
+    this.client
+      .getByFilter(this.filter)
+      .subscribe(x => {
+        this.projects = x;
+      });
   }
 }

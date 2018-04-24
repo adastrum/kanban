@@ -11,19 +11,39 @@ export class ProjectClientMock implements IProjectsClient {
 
     constructor() { }
 
-    getProjects(filter: ProjectFilter): Observable<Project[]> {
+    getByFilter(filter: ProjectFilter): Observable<Project[]> {
         return Observable.of(this.projects);
     }
-    createProject(model: CreateProjectModel): Observable<object> {
-        throw new Error("Method not implemented.");
+    create(model: CreateProjectModel): Observable<object> {
+        let count = this.projects.length;
+        let id = `id${count + 1}`;
+        let project = new Project();
+        project.id = id;
+        project.name = model.name;
+        project.description = model.description;
+        project.status = model.status;
+        this.projects.push(project);
+
+        return Observable.of(null);
     }
-    getProjectById(id: string): Observable<Project> {
-        throw new Error("Method not implemented.");
+    getById(id: string): Observable<Project> {
+        return Observable.of(this.projects.find(x => x.id == id));
     }
-    put(id: string, model: UpdateProjectModel): Observable<object> {
-        throw new Error("Method not implemented.");
+    update(id: string, model: UpdateProjectModel): Observable<object> {
+        let index = this.projects.findIndex(x => x.id == id);
+        let project = new Project();
+        project.id = id;
+        project.name = model.name;
+        project.description = model.description;
+        project.status = model.status;
+        this.projects[index] = project;
+
+        return Observable.of(null);
     }
     delete(id: string): Observable<object> {
-        throw new Error("Method not implemented.");
+        let index = this.projects.findIndex(x => x.id == id);
+        delete this.projects[id];
+
+        return Observable.of(null);
     }
 }
