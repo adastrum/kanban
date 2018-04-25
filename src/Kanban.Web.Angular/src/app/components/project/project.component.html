@@ -1,20 +1,44 @@
 <div *ngIf="project">
-    <form>
-        <div class="form-group">
-            <label for="projectName">Name</label>
-            <input class="form-control" id="projectName" [(ngModel)]="project.name" name="name" placeholder="project name">
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{'active': selectedTab === 0}" (click)="selectTab(0)">Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [ngClass]="{'active': selectedTab === 1}" (click)="selectTab(1)">Tasks</a>
+                </li>
+            </ul>
         </div>
-        <div class="form-group">
-            <label for="projectDescription">Description</label>
-            <input class="form-control" id="projectDescription" [(ngModel)]="project.description" name="description" placeholder="description">
+        <div class="card-body">
+            <div *ngIf="selectedTab === 0">
+                <form>
+                    <div class="text-right">
+                        <button class="btn" (click)="goBack()">Back to list</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectName">Name</label>
+                        <input class="form-control" id="projectName" [(ngModel)]="project.name" name="name" placeholder="project name">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDescription">Description</label>
+                        <input class="form-control" id="projectDescription" [(ngModel)]="project.description" name="description" placeholder="description">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectStatus">Status</label>
+                        <select class="form-control" id="projectStatus" required [(ngModel)]="project.status" name="projectStatus">
+                            <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+                        </select>
+                    </div>
+                    <div class="text-right">
+                        <button class="btn btn-primary" (click)="update()">Save</button>
+                        <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div *ngIf="selectedTab === 1">
+                tasks
+            </div>
         </div>
-        <div class="form-group">
-            <label for="projectStatus">Status</label>
-            <select class="form-control" id="projectStatus" required [(ngModel)]="project.status" name="projectStatus">
-                <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
-            </select>
-        </div>
-        <button class="btn" (click)="goBack()">Back to list</button>
-        <button class="btn" (click)="update()">Save</button>
-    </form>
+    </div>
 </div>

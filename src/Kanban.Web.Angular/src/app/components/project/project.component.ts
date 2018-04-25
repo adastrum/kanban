@@ -18,11 +18,14 @@ export class ProjectComponent implements OnInit {
   location: Location;
   project: Project;
   statuses: ProjectStatus[] = [ProjectStatus.Active, ProjectStatus.Inactive];
+  selectedTab: number;
 
   constructor(client: ProjectsClient, route: ActivatedRoute, location: Location) {
     this.client = client;
     this.route = route;
     this.location = location;
+
+    this.selectedTab = 0;
   }
 
   ngOnInit(): void {
@@ -34,6 +37,10 @@ export class ProjectComponent implements OnInit {
       });
   }
 
+  selectTab(index: number) {
+    this.selectedTab = index;
+  }
+
   goBack(): void {
     this.location.back();
   }
@@ -42,7 +49,11 @@ export class ProjectComponent implements OnInit {
     this.client
       .update(this.project.id, new UpdateProjectModel({ name: this.project.name, description: this.project.description, status: this.project.status }))
       .subscribe(x => {
-        console.log("updated")
+        console.log("update")
       });
+  }
+
+  cancel(): void {
+    console.log("cancel");
   }
 }
