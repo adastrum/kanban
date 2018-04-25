@@ -3,3 +3,15 @@
 body {
     margin: 100px;
 }
+.stage {
+    min-height: 500px;
+    padding: 0;
+    border: 5px solid white;
+}
+.task {
+    min-height: 100px;
+    margin: 10px;
+}
+.task.card .card-body {
+    user-select: none;
+}
