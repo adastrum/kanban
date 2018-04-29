@@ -20,6 +20,8 @@ namespace Kanban.Infrastructure.Data
                 .HasOne(x => x.Project)
                 .WithMany(x => x.Tasks)
                 .HasForeignKey(x => x.ProjectId);
+            modelBuilder.Entity<ProjectTask>().Property(x => x.DueDate).IsRequired(false);
+            modelBuilder.Entity<ProjectTask>().Property(x => x.CompletedDate).IsRequired(false);
 
             modelBuilder.Entity<User>()
                 .HasKey(x => x.Id);
@@ -27,7 +29,7 @@ namespace Kanban.Infrastructure.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Kanban;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=.;Database=Kanban;Trusted_Connection=True;");
         }
     }
 }

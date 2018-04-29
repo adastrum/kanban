@@ -44,13 +44,13 @@ namespace Kanban.Infrastructure.Data.Migrations
 
                     b.Property<Guid?>("AssigneeId");
 
-                    b.Property<DateTime>("CompletedDate");
+                    b.Property<DateTime?>("CompletedDate");
 
                     b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("DueDate");
+                    b.Property<DateTime?>("DueDate");
 
                     b.Property<string>("Name");
 
