@@ -9,55 +9,55 @@ using Microsoft.AspNetCore.Mvc;
 namespace Kanban.Web.API.Controllers
 {
     [Route("api/[controller]")]
-    public class ProjectsController : Controller
+    public class UsersController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IProjectService _projectService;
+        private readonly IUserService _userService;
 
-        public ProjectsController(
+        public UsersController(
             IMapper mapper,
-            IProjectService projectService
+            IUserService userService
         )
         {
             _mapper = mapper;
-            _projectService = projectService;
+            _userService = userService;
         }
 
         [HttpGet]
-        public IActionResult GetByFilter([FromQuery] ProjectFilter filter)
+        public IActionResult GetByFilter([FromQuery] UserFilter filter)
         {
-            return Ok(_projectService.Get(filter));
+            return Ok(_userService.Get(filter));
         }
 
         [HttpGet("{id:guid}")]
         public IActionResult GetById(Guid id)
         {
-            var project = _projectService.FindById(id);
+            var user = _userService.FindById(id);
 
-            if (project == null) return NotFound();
+            if (user == null) return NotFound();
 
-            return Ok(project);
+            return Ok(user);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateProjectModel model)
+        public IActionResult Create([FromBody] CreateUserModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var project = _mapper.Map<CreateProjectModel, Project>(model);
-            _projectService.Create(project);
+            var user = _mapper.Map<CreateUserModel, User>(model);
+            _userService.Create(user);
 
-            return CreatedAtAction(nameof(GetById), new { project.Id }, project);
+            return CreatedAtAction(nameof(GetById), new { user.Id }, user);
         }
 
         [HttpPut("{id:guid}")]
-        public IActionResult Update(Guid id, [FromBody] UpdateProjectModel model)
+        public IActionResult Update(Guid id, [FromBody] UpdateUserModel model)
         {
-            var project = _projectService.FindById(id);
-            if (project == null)
+            var user = _userService.FindById(id);
+            if (user == null)
             {
                 return NotFound();
             }
@@ -67,8 +67,8 @@ namespace Kanban.Web.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            _mapper.Map(model, project);
-            _projectService.Update(project);
+            _mapper.Map(model, user);
+            _userService.Update(user);
 
             return NoContent();
         }
@@ -76,13 +76,13 @@ namespace Kanban.Web.API.Controllers
         [HttpDelete("{id:guid}")]
         public IActionResult Delete(Guid id)
         {
-            var project = _projectService.FindById(id);
-            if (project == null)
+            var user = _userService.FindById(id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _projectService.Remove(project);
+            _userService.Remove(user);
 
             return NoContent();
         }

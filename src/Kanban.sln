@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{27391171-D51C-44DA-B228-CAD1CD9C23E0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{00F8EB38-DCA4-4E1F-8BE5-3AD13282F32E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{00F8EB38-DCA4-4E1F-8BE5-3AD13282F32E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{2CBD4A84-6BDE-4B0B-8C7B-186EBEAF2643}"
 EndProject
@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Application.Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Web.Mvc", "Kanban.Web.Mvc\Kanban.Web.Mvc.csproj", "{1FE0DCB6-88A5-408B-8A41-BF4F30AF097D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kanban.Web.API", "Kanban.Web.API\Kanban.Web.API.csproj", "{65D427F0-DE58-4D94-88DA-B3453BBB2E80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kanban.Web.API", "Kanban.Web.API\Kanban.Web.API.csproj", "{65D427F0-DE58-4D94-88DA-B3453BBB2E80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

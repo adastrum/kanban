@@ -38,7 +38,11 @@ namespace Kanban.Web.API
             services.AddMvc();
             services.AddScoped<DbContext, KanbanDbContext>();
             services.AddScoped<IRepository<Project>, Repository<Project>>();
+            services.AddScoped<IRepository<ProjectTask>, Repository<ProjectTask>>();
+            services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IProjectTaskService, ProjectTaskService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

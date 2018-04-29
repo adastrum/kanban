@@ -17,9 +17,9 @@ namespace Kanban.Domain.Model.Entities
 
         public DateTime CreatedDate { get; set; }
 
-        public DateTime DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
 
-        public DateTime CompletedDate { get; set; }
+        public DateTime? CompletedDate { get; set; }
 
         public ProjectTaskStatus Status { get; set; }
 
