@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Kanban.Application.Services.Filters;
 using Kanban.Domain.Model.Entities;
 using Kanban.Domain.Services.Services;
 using Kanban.Web.API.Models.Request;
+using Kanban.Web.API.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kanban.Web.API.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class UsersController : Controller
     {
         private readonly IMapper _mapper;
@@ -24,22 +28,32 @@ namespace Kanban.Web.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(List<UserModel>))]
         public IActionResult GetByFilter([FromQuery] UserFilter filter)
         {
-            return Ok(_userService.Get(filter));
+            var users = _userService.Get(filter);
+            var result = users
+                .Select(x => _mapper.Map<UserModel>(x))
+                .ToList();
+
+            return Ok(result);
         }
 
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(200, Type = typeof(UserModel))]
+        [ProducesResponseType(404)]
         public IActionResult GetById(Guid id)
         {
             var user = _userService.FindById(id);
 
             if (user == null) return NotFound();
 
-            return Ok(user);
+            return Ok(_mapper.Map<UserModel>(user));
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public IActionResult Create([FromBody] CreateUserModel model)
         {
             if (!ModelState.IsValid)
@@ -49,11 +63,15 @@ namespace Kanban.Web.API.Controllers
 
             var user = _mapper.Map<CreateUserModel, User>(model);
             _userService.Create(user);
+            var result = _mapper.Map<UserModel>(user);
 
-            return CreatedAtAction(nameof(GetById), new { user.Id }, user);
+            return CreatedAtAction(nameof(GetById), new { result.Id }, result);
         }
 
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Update(Guid id, [FromBody] UpdateUserModel model)
         {
             var user = _userService.FindById(id);
@@ -74,6 +92,8 @@ namespace Kanban.Web.API.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(Guid id)
         {
             var user = _userService.FindById(id);

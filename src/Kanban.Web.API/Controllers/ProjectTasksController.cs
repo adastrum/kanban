@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Kanban.Application.Services.Filters;
 using Kanban.Domain.Model.Entities;
 using Kanban.Domain.Services.Services;
 using Kanban.Web.API.Models.Request;
+using Kanban.Web.API.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kanban.Web.API.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class ProjectTasksController : Controller
     {
         private readonly IMapper _mapper;
@@ -24,22 +28,32 @@ namespace Kanban.Web.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(List<ProjectTaskModel>))]
         public IActionResult GetByFilter([FromQuery] ProjectTaskFilter filter)
         {
-            return Ok(_projectTaskService.Get(filter));
+            var projectTasks = _projectTaskService.Get(filter);
+            var result = projectTasks
+                .Select(x => _mapper.Map<ProjectTaskModel>(x))
+                .ToList();
+
+            return Ok(result);
         }
 
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(200, Type = typeof(ProjectTaskModel))]
+        [ProducesResponseType(404)]
         public IActionResult GetById(Guid id)
         {
-            var project = _projectTaskService.FindById(id);
+            var projectTask = _projectTaskService.FindById(id);
 
-            if (project == null) return NotFound();
+            if (projectTask == null) return NotFound();
 
-            return Ok(project);
+            return Ok(_mapper.Map<ProjectTaskModel>(projectTask));
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public IActionResult Create([FromBody] CreateProjectTaskModel model)
         {
             if (!ModelState.IsValid)
@@ -49,11 +63,15 @@ namespace Kanban.Web.API.Controllers
 
             var projectTask = _mapper.Map<CreateProjectTaskModel, ProjectTask>(model);
             _projectTaskService.Create(projectTask);
+            var result = _mapper.Map<ProjectTaskModel>(projectTask);
 
-            return CreatedAtAction(nameof(GetById), new { projectTask.Id }, projectTask);
+            return CreatedAtAction(nameof(GetById), new { result.Id }, result);
         }
 
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Update(Guid id, [FromBody] UpdateProjectTaskModel model)
         {
             var projectTask = _projectTaskService.FindById(id);
@@ -74,6 +92,8 @@ namespace Kanban.Web.API.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(Guid id)
         {
             var projectTask = _projectTaskService.FindById(id);

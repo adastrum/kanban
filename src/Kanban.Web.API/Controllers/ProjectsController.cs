@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Kanban.Application.Services.Filters;
 using Kanban.Domain.Model.Entities;
 using Kanban.Domain.Services.Services;
 using Kanban.Web.API.Models.Request;
+using Kanban.Web.API.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kanban.Web.API.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class ProjectsController : Controller
     {
         private readonly IMapper _mapper;
@@ -24,22 +28,32 @@ namespace Kanban.Web.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(List<ProjectModel>))]
         public IActionResult GetByFilter([FromQuery] ProjectFilter filter)
         {
-            return Ok(_projectService.Get(filter));
+            var projects = _projectService.Get(filter);
+            var result = projects
+                .Select(x => _mapper.Map<ProjectModel>(x))
+                .ToList();
+
+            return Ok(result);
         }
 
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(200, Type = typeof(ProjectModel))]
+        [ProducesResponseType(404)]
         public IActionResult GetById(Guid id)
         {
             var project = _projectService.FindById(id);
 
             if (project == null) return NotFound();
 
-            return Ok(project);
+            return Ok(_mapper.Map<ProjectModel>(project));
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public IActionResult Create([FromBody] CreateProjectModel model)
         {
             if (!ModelState.IsValid)
@@ -49,11 +63,15 @@ namespace Kanban.Web.API.Controllers
 
             var project = _mapper.Map<CreateProjectModel, Project>(model);
             _projectService.Create(project);
+            var result = _mapper.Map<ProjectModel>(project);
 
-            return CreatedAtAction(nameof(GetById), new { project.Id }, project);
+            return CreatedAtAction(nameof(GetById), new { result.Id }, result);
         }
 
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult Update(Guid id, [FromBody] UpdateProjectModel model)
         {
             var project = _projectService.FindById(id);
@@ -74,6 +92,8 @@ namespace Kanban.Web.API.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public IActionResult Delete(Guid id)
         {
             var project = _projectService.FindById(id);
