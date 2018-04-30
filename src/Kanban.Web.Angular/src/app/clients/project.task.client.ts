@@ -24,17 +24,25 @@ import {
   HttpResponseBase,
   HttpErrorResponse
 } from "@angular/common/http";
-import { API_BASE_URL, httpOptions } from "../globals";
+import { API_BASE_URL } from "../globals";
 
 export interface IProjectTasksClient {
-  getByFilter(filter: ProjectTaskFilter): Observable<ProjectTask[] | null>;
-  create(model: CreateProjectTaskModel | null): Observable<object | null>;
-  getById(id: string): Observable<ProjectTask | null>;
-  update(
-    id: string,
-    model: UpdateProjectTaskModel | null
-  ): Observable<object | null>;
-  delete(id: string): Observable<object | null>;
+  getByFilter(
+    name: string | null | undefined,
+    description: string | null | undefined,
+    number: string | null | undefined,
+    reporterId: string | null | undefined,
+    assigneeId: string | null | undefined,
+    createdDate: Date | null | undefined,
+    dueDate: Date | null | undefined,
+    completedDate: Date | null | undefined,
+    status: ProjectTaskStatus | null | undefined,
+    projectId: string | null | undefined
+  ): Observable<ProjectTaskModel[] | null>;
+  create(model: CreateProjectTaskModel | null): Observable<void>;
+  getById(id: string): Observable<ProjectTaskModel | null>;
+  update(id: string, model: UpdateProjectTaskModel | null): Observable<void>;
+  delete(id: string): Observable<void>;
 }
 
 @Injectable()
@@ -55,74 +63,285 @@ export class ProjectTasksClient implements IProjectTasksClient {
     this.baseUrl = baseUrl ? baseUrl : "";
   }
 
-  getByFilter(filter: ProjectTaskFilter): Observable<ProjectTask[] | null> {
+  getByFilter(
+    name: string | null | undefined,
+    description: string | null | undefined,
+    number: string | null | undefined,
+    reporterId: string | null | undefined,
+    assigneeId: string | null | undefined,
+    createdDate: Date | null | undefined,
+    dueDate: Date | null | undefined,
+    completedDate: Date | null | undefined,
+    status: ProjectTaskStatus | null | undefined,
+    projectId: string | null | undefined
+  ): Observable<ProjectTaskModel[] | null> {
     let url_ = this.baseUrl + "/api/ProjectTasks?";
     if (name !== undefined)
       url_ += "Name=" + encodeURIComponent("" + name) + "&";
-    if (filter.description !== undefined)
-      url_ +=
-        "Description=" + encodeURIComponent("" + filter.description) + "&";
-    if (filter.number !== undefined)
-      url_ += "Number=" + encodeURIComponent("" + filter.number) + "&";
-    if (filter.reporterId !== undefined)
-      url_ += "ReporterId=" + encodeURIComponent("" + filter.reporterId) + "&";
-    if (filter.assigneeId !== undefined)
-      url_ += "AssigneeId=" + encodeURIComponent("" + filter.assigneeId) + "&";
-    if (filter.createdDate !== undefined)
+    if (description !== undefined)
+      url_ += "Description=" + encodeURIComponent("" + description) + "&";
+    if (number !== undefined)
+      url_ += "Number=" + encodeURIComponent("" + number) + "&";
+    if (reporterId !== undefined)
+      url_ += "ReporterId=" + encodeURIComponent("" + reporterId) + "&";
+    if (assigneeId !== undefined)
+      url_ += "AssigneeId=" + encodeURIComponent("" + assigneeId) + "&";
+    if (createdDate !== undefined)
       url_ +=
         "CreatedDate=" +
-        encodeURIComponent(
-          filter.createdDate ? "" + filter.createdDate.toJSON() : ""
-        ) +
+        encodeURIComponent(createdDate ? "" + createdDate.toJSON() : "") +
         "&";
-    if (filter.dueDate !== undefined)
+    if (dueDate !== undefined)
       url_ +=
         "DueDate=" +
-        encodeURIComponent(filter.dueDate ? "" + filter.dueDate.toJSON() : "") +
+        encodeURIComponent(dueDate ? "" + dueDate.toJSON() : "") +
         "&";
-    if (filter.completedDate !== undefined)
+    if (completedDate !== undefined)
       url_ +=
         "CompletedDate=" +
-        encodeURIComponent(
-          filter.completedDate ? "" + filter.completedDate.toJSON() : ""
-        ) +
+        encodeURIComponent(completedDate ? "" + completedDate.toJSON() : "") +
         "&";
-    if (filter.status !== undefined)
-      url_ += "Status=" + encodeURIComponent("" + filter.status) + "&";
-    if (filter.projectId !== undefined)
-      url_ += "ProjectId=" + encodeURIComponent("" + filter.projectId) + "&";
+    if (status !== undefined)
+      url_ += "Status=" + encodeURIComponent("" + status) + "&";
+    if (projectId !== undefined)
+      url_ += "ProjectId=" + encodeURIComponent("" + projectId) + "&";
     url_ = url_.replace(/[?&]$/, "");
 
-    return this.http.get(url_).map(x => {
-      return <ProjectTask[]>x;
-    });
+    let options_: any = {
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      })
+    };
+
+    return this.http
+      .request("get", url_, options_)
+      .flatMap((response_: any) => {
+        return this.processGetByFilter(response_);
+      })
+      .catch((response_: any) => {
+        if (response_ instanceof HttpResponseBase) {
+          try {
+            return this.processGetByFilter(<any>response_);
+          } catch (e) {
+            return <Observable<
+              ProjectTaskModel[] | null
+            >>(<any>Observable.throw(e));
+          }
+        } else
+          return <Observable<ProjectTaskModel[] | null>>(<any>Observable.throw(
+            response_
+          ));
+      });
   }
 
-  create(model: CreateProjectTaskModel | null): Observable<object | null> {
+  protected processGetByFilter(
+    response: HttpResponseBase
+  ): Observable<ProjectTaskModel[] | null> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse
+        ? response.body
+        : (<any>response).error instanceof Blob
+          ? (<any>response).error
+          : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        let result200: any = null;
+        let resultData200 =
+          _responseText === ""
+            ? null
+            : JSON.parse(_responseText, this.jsonParseReviver);
+        if (resultData200 && resultData200.constructor === Array) {
+          result200 = [];
+          for (let item of resultData200)
+            result200.push(ProjectTaskModel.fromJS(item));
+        }
+        return Observable.of(result200);
+      });
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "An unexpected server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    }
+    return Observable.of<ProjectTaskModel[] | null>(<any>null);
+  }
+
+  create(model: CreateProjectTaskModel | null): Observable<void> {
     let url_ = this.baseUrl + "/api/ProjectTasks";
     url_ = url_.replace(/[?&]$/, "");
 
     const content_ = JSON.stringify(model);
 
-    return this.http.post(url_, content_, httpOptions);
+    let options_: any = {
+      body: content_,
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json"
+      })
+    };
+
+    return this.http
+      .request("post", url_, options_)
+      .flatMap((response_: any) => {
+        return this.processCreate(response_);
+      })
+      .catch((response_: any) => {
+        if (response_ instanceof HttpResponseBase) {
+          try {
+            return this.processCreate(<any>response_);
+          } catch (e) {
+            return <Observable<void>>(<any>Observable.throw(e));
+          }
+        } else return <Observable<void>>(<any>Observable.throw(response_));
+      });
   }
 
-  getById(id: string): Observable<ProjectTask | null> {
+  protected processCreate(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse
+        ? response.body
+        : (<any>response).error instanceof Blob
+          ? (<any>response).error
+          : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 201) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return Observable.of<void>(<any>null);
+      });
+    } else if (status === 400) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "A server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "An unexpected server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    }
+    return Observable.of<void>(<any>null);
+  }
+
+  getById(id: string): Observable<ProjectTaskModel | null> {
     let url_ = this.baseUrl + "/api/ProjectTasks/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
     url_ = url_.replace(/[?&]$/, "");
 
-    return this.http.get(url_).map(x => {
-      return <ProjectTask>x;
-    });
+    let options_: any = {
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      })
+    };
+
+    return this.http
+      .request("get", url_, options_)
+      .flatMap((response_: any) => {
+        return this.processGetById(response_);
+      })
+      .catch((response_: any) => {
+        if (response_ instanceof HttpResponseBase) {
+          try {
+            return this.processGetById(<any>response_);
+          } catch (e) {
+            return <Observable<ProjectTaskModel | null>>(<any>Observable.throw(
+              e
+            ));
+          }
+        } else
+          return <Observable<ProjectTaskModel | null>>(<any>Observable.throw(
+            response_
+          ));
+      });
   }
 
-  update(
-    id: string,
-    model: UpdateProjectTaskModel | null
-  ): Observable<object | null> {
+  protected processGetById(
+    response: HttpResponseBase
+  ): Observable<ProjectTaskModel | null> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse
+        ? response.body
+        : (<any>response).error instanceof Blob
+          ? (<any>response).error
+          : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 200) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        let result200: any = null;
+        let resultData200 =
+          _responseText === ""
+            ? null
+            : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200
+          ? ProjectTaskModel.fromJS(resultData200)
+          : <any>null;
+        return Observable.of(result200);
+      });
+    } else if (status === 404) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "A server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "An unexpected server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    }
+    return Observable.of<ProjectTaskModel | null>(<any>null);
+  }
+
+  update(id: string, model: UpdateProjectTaskModel | null): Observable<void> {
     let url_ = this.baseUrl + "/api/ProjectTasks/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
@@ -131,17 +350,151 @@ export class ProjectTasksClient implements IProjectTasksClient {
 
     const content_ = JSON.stringify(model);
 
-    return this.http.put(url_, content_, httpOptions);
+    let options_: any = {
+      body: content_,
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json"
+      })
+    };
+
+    return this.http
+      .request("put", url_, options_)
+      .flatMap((response_: any) => {
+        return this.processUpdate(response_);
+      })
+      .catch((response_: any) => {
+        if (response_ instanceof HttpResponseBase) {
+          try {
+            return this.processUpdate(<any>response_);
+          } catch (e) {
+            return <Observable<void>>(<any>Observable.throw(e));
+          }
+        } else return <Observable<void>>(<any>Observable.throw(response_));
+      });
   }
 
-  delete(id: string): Observable<object | null> {
+  protected processUpdate(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse
+        ? response.body
+        : (<any>response).error instanceof Blob
+          ? (<any>response).error
+          : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 204) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return Observable.of<void>(<any>null);
+      });
+    } else if (status === 400) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "A server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    } else if (status === 404) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "A server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "An unexpected server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    }
+    return Observable.of<void>(<any>null);
+  }
+
+  delete(id: string): Observable<void> {
     let url_ = this.baseUrl + "/api/ProjectTasks/{id}";
     if (id === undefined || id === null)
       throw new Error("The parameter 'id' must be defined.");
     url_ = url_.replace("{id}", encodeURIComponent("" + id));
     url_ = url_.replace(/[?&]$/, "");
 
-    return this.http.delete(url_);
+    let options_: any = {
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json"
+      })
+    };
+
+    return this.http
+      .request("delete", url_, options_)
+      .flatMap((response_: any) => {
+        return this.processDelete(response_);
+      })
+      .catch((response_: any) => {
+        if (response_ instanceof HttpResponseBase) {
+          try {
+            return this.processDelete(<any>response_);
+          } catch (e) {
+            return <Observable<void>>(<any>Observable.throw(e));
+          }
+        } else return <Observable<void>>(<any>Observable.throw(response_));
+      });
+  }
+
+  protected processDelete(response: HttpResponseBase): Observable<void> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse
+        ? response.body
+        : (<any>response).error instanceof Blob
+          ? (<any>response).error
+          : undefined;
+
+    let _headers: any = {};
+    if (response.headers) {
+      for (let key of response.headers.keys()) {
+        _headers[key] = response.headers.get(key);
+      }
+    }
+    if (status === 204) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return Observable.of<void>(<any>null);
+      });
+    } else if (status === 404) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "A server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).flatMap(_responseText => {
+        return throwException(
+          "An unexpected server error occurred.",
+          status,
+          _responseText,
+          _headers
+        );
+      });
+    }
+    return Observable.of<void>(<any>null);
   }
 }
 
@@ -149,6 +502,94 @@ export enum ProjectTaskStatus {
   ToDo = "ToDo",
   InProgress = "InProgress",
   Done = "Done"
+}
+
+export class ProjectTaskModel implements IProjectTaskModel {
+  id: string;
+  name?: string | undefined;
+  description?: string | undefined;
+  number?: string | undefined;
+  reporterId: string;
+  assigneeId: string;
+  createdDate: Date;
+  dueDate?: Date | undefined;
+  completedDate?: Date | undefined;
+  status: ProjectTaskStatus;
+  projectId: string;
+
+  constructor(data?: IProjectTaskModel) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      this.id = data["id"];
+      this.name = data["name"];
+      this.description = data["description"];
+      this.number = data["number"];
+      this.reporterId = data["reporterId"];
+      this.assigneeId = data["assigneeId"];
+      this.createdDate = data["createdDate"]
+        ? new Date(data["createdDate"].toString())
+        : <any>undefined;
+      this.dueDate = data["dueDate"]
+        ? new Date(data["dueDate"].toString())
+        : <any>undefined;
+      this.completedDate = data["completedDate"]
+        ? new Date(data["completedDate"].toString())
+        : <any>undefined;
+      this.status = data["status"];
+      this.projectId = data["projectId"];
+    }
+  }
+
+  static fromJS(data: any): ProjectTaskModel {
+    data = typeof data === "object" ? data : {};
+    let result = new ProjectTaskModel();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === "object" ? data : {};
+    data["id"] = this.id;
+    data["name"] = this.name;
+    data["description"] = this.description;
+    data["number"] = this.number;
+    data["reporterId"] = this.reporterId;
+    data["assigneeId"] = this.assigneeId;
+    data["createdDate"] = this.createdDate
+      ? this.createdDate.toISOString()
+      : <any>undefined;
+    data["dueDate"] = this.dueDate
+      ? this.dueDate.toISOString()
+      : <any>undefined;
+    data["completedDate"] = this.completedDate
+      ? this.completedDate.toISOString()
+      : <any>undefined;
+    data["status"] = this.status;
+    data["projectId"] = this.projectId;
+    return data;
+  }
+}
+
+export interface IProjectTaskModel {
+  id: string;
+  name?: string | undefined;
+  description?: string | undefined;
+  number?: string | undefined;
+  reporterId: string;
+  assigneeId: string;
+  createdDate: Date;
+  dueDate?: Date | undefined;
+  completedDate?: Date | undefined;
+  status: ProjectTaskStatus;
+  projectId: string;
 }
 
 export class CreateProjectTaskModel implements ICreateProjectTaskModel {
@@ -303,29 +744,62 @@ export interface IUpdateProjectTaskModel {
   status: ProjectTaskStatus;
 }
 
-export class ProjectTask {
-  id: string;
-  name: string;
-  description: string;
-  number: string;
-  reporterId: string;
-  assigneeId: string;
-  createdDate: Date;
-  dueDate?: Date | undefined;
-  completedDate?: Date | undefined;
-  status: ProjectTaskStatus;
-  projectId: string;
+export class SwaggerException extends Error {
+  message: string;
+  status: number;
+  response: string;
+  headers: { [key: string]: any };
+  result: any;
+
+  constructor(
+    message: string,
+    status: number,
+    response: string,
+    headers: { [key: string]: any },
+    result: any
+  ) {
+    super();
+
+    this.message = message;
+    this.status = status;
+    this.response = response;
+    this.headers = headers;
+    this.result = result;
+  }
+
+  protected isSwaggerException = true;
+
+  static isSwaggerException(obj: any): obj is SwaggerException {
+    return obj.isSwaggerException === true;
+  }
 }
 
-export class ProjectTaskFilter {
-  name: string | null | undefined;
-  description: string | null | undefined;
-  number: string | null | undefined;
-  reporterId: string | null | undefined;
-  assigneeId: string | null | undefined;
-  createdDate: Date | null | undefined;
-  dueDate: Date | null | undefined;
-  completedDate: Date | null | undefined;
-  status: ProjectTaskStatus | null | undefined;
-  projectId: string | null | undefined;
+function throwException(
+  message: string,
+  status: number,
+  response: string,
+  headers: { [key: string]: any },
+  result?: any
+): Observable<any> {
+  if (result !== null && result !== undefined) return Observable.throw(result);
+  else
+    return Observable.throw(
+      new SwaggerException(message, status, response, headers, null)
+    );
+}
+
+function blobToText(blob: any): Observable<string> {
+  return new Observable<string>((observer: any) => {
+    if (!blob) {
+      observer.next("");
+      observer.complete();
+    } else {
+      let reader = new FileReader();
+      reader.onload = function() {
+        observer.next(this.result);
+        observer.complete();
+      };
+      reader.readAsText(blob);
+    }
+  });
 }

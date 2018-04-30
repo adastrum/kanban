@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { Location } from '@angular/common';
+import { Location } from "@angular/common";
 import { ActivatedRoute } from "@angular/router";
 import {
   ProjectsClient,
   ProjectStatus,
-  Project,
+  ProjectModel,
   UpdateProjectModel
 } from "../../clients/project.client";
 
@@ -16,11 +16,15 @@ export class ProjectComponent implements OnInit {
   client: ProjectsClient;
   route: ActivatedRoute;
   location: Location;
-  project: Project;
+  project: ProjectModel;
   statuses: ProjectStatus[] = [ProjectStatus.Active, ProjectStatus.Inactive];
   selectedTab: number;
 
-  constructor(client: ProjectsClient, route: ActivatedRoute, location: Location) {
+  constructor(
+    client: ProjectsClient,
+    route: ActivatedRoute,
+    location: Location
+  ) {
     this.client = client;
     this.route = route;
     this.location = location;
@@ -30,11 +34,9 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get("id");
-    this.client
-      .getById(id)
-      .subscribe(x => {
-        this.project = x;
-      });
+    this.client.getById(id).subscribe(x => {
+      this.project = x;
+    });
   }
 
   selectTab(index: number) {
@@ -47,9 +49,16 @@ export class ProjectComponent implements OnInit {
 
   update(): void {
     this.client
-      .update(this.project.id, new UpdateProjectModel({ name: this.project.name, description: this.project.description, status: this.project.status }))
+      .update(
+        this.project.id,
+        new UpdateProjectModel({
+          name: this.project.name,
+          description: this.project.description,
+          status: this.project.status
+        })
+      )
       .subscribe(x => {
-        console.log("update")
+        console.log("update");
       });
   }
 

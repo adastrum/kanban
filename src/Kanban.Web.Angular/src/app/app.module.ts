@@ -9,7 +9,7 @@ import { ProjectsClient } from "./clients/project.client";
 import { ProjectTasksClient } from "./clients/project.task.client";
 import { AppRoutingModule } from "./app-routing.module";
 import { ProjectComponent } from "./components/project/project.component";
-import { ProjectClientMock } from "./clients/project.client.mock";
+// import { ProjectClientMock } from "./clients/project.client.mock";
 import { API_BASE_URL } from "./globals";
 
 @NgModule({

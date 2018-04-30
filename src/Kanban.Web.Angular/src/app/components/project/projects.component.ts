@@ -2,8 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import {
   ProjectsClient,
   ProjectStatus,
-  Project,
-  ProjectFilter
+  ProjectModel
 } from "../../clients/project.client";
 
 @Component({
@@ -12,19 +11,15 @@ import {
 })
 export class ProjectsComponent implements OnInit {
   client: ProjectsClient;
-  filter: ProjectFilter;
-  projects: Project[];
+  projects: ProjectModel[];
 
   constructor(client: ProjectsClient) {
     this.client = client;
   }
 
   ngOnInit(): void {
-    this.filter = new ProjectFilter();
-    this.client
-      .getByFilter(this.filter)
-      .subscribe(x => {
-        this.projects = x;
-      });
+    this.client.getByFilter("", "", null).subscribe(x => {
+      this.projects = x;
+    });
   }
 }
