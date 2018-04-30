@@ -24,7 +24,7 @@ import {
   HttpResponseBase,
   HttpErrorResponse
 } from "@angular/common/http";
-import { API_BASE_URL } from "../globals";
+import { API_BASE_URL, httpOptions } from "../globals";
 
 export interface IProjectTasksClient {
   getByFilter(filter: ProjectTaskFilter): Observable<ProjectTask[] | null>;
@@ -104,7 +104,7 @@ export class ProjectTasksClient implements IProjectTasksClient {
 
     const content_ = JSON.stringify(model);
 
-    return this.http.post(url_, content_);
+    return this.http.post(url_, content_, httpOptions);
   }
 
   getById(id: string): Observable<ProjectTask | null> {
@@ -131,7 +131,7 @@ export class ProjectTasksClient implements IProjectTasksClient {
 
     const content_ = JSON.stringify(model);
 
-    return this.http.put(url_, content_);
+    return this.http.put(url_, content_, httpOptions);
   }
 
   delete(id: string): Observable<object | null> {

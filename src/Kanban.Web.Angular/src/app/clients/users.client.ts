@@ -24,7 +24,7 @@ import {
   HttpResponseBase,
   HttpErrorResponse
 } from "@angular/common/http";
-import { API_BASE_URL } from "../globals";
+import { API_BASE_URL, httpOptions } from "../globals";
 
 export interface IUsersClient {
   getByFilter(filter: UserFilter): Observable<User[] | null>;
@@ -69,7 +69,7 @@ export class UsersClient implements IUsersClient {
 
     const content_ = JSON.stringify(model);
 
-    return this.http.post(url_, content_);
+    return this.http.post(url_, content_, httpOptions);
   }
 
   getById(id: string): Observable<User | null> {
@@ -93,7 +93,7 @@ export class UsersClient implements IUsersClient {
 
     const content_ = JSON.stringify(model);
 
-    return this.http.put(url_, content_);
+    return this.http.put(url_, content_, httpOptions);
   }
 
   delete(id: string): Observable<object | null> {
